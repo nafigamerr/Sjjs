@@ -27,7 +27,7 @@ MainFrame.Draggable = true
 Title.Parent = MainFrame
 Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Text = "Ultimate Hack GUI"
+Title.Text = "Advanced Hack GUI"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -104,22 +104,154 @@ InfiniteYieldButton.MouseButton1Click:Connect(function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 end)
 
--- Gravity Slider
-local GravitySlider = Instance.new("TextBox")
-GravitySlider.Parent = AdminTab
-GravitySlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-GravitySlider.Size = UDim2.new(1, -20, 0, 30)
-GravitySlider.Position = UDim2.new(0, 10, 0, 50)
-GravitySlider.Text = "Gravity: 196.2"
-GravitySlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-GravitySlider.Font = Enum.Font.Gotham
-GravitySlider.TextSize = 14
+-- God Mode Toggle
+local GodModeButton = Instance.new("TextButton")
+GodModeButton.Parent = AdminTab
+GodModeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+GodModeButton.Size = UDim2.new(1, -20, 0, 30)
+GodModeButton.Position = UDim2.new(0, 10, 0, 50)
+GodModeButton.Text = "God Mode [OFF]"
+GodModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodModeButton.Font = Enum.Font.Gotham
+GodModeButton.TextSize = 14
 
-GravitySlider.FocusLost:Connect(function()
-    local gravity = tonumber(GravitySlider.Text:match("%d+"))
-    if gravity then
-        workspace.Gravity = gravity
-        GravitySlider.Text = "Gravity: " .. gravity
+local godMode = false
+GodModeButton.MouseButton1Click:Connect(function()
+    godMode = not godMode
+    GodModeButton.Text = godMode and "God Mode [ON]" or "God Mode [OFF]"
+    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid and godMode then
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
+    elseif humanoid then
+        humanoid.MaxHealth = 100
+        humanoid.Health = humanoid.MaxHealth
+    end
+end)
+
+-- Noclip Toggle
+local NoClipButton = Instance.new("TextButton")
+NoClipButton.Parent = AdminTab
+NoClipButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+NoClipButton.Size = UDim2.new(1, -20, 0, 30)
+NoClipButton.Position = UDim2.new(0, 10, 0, 90)
+NoClipButton.Text = "Noclip [OFF]"
+NoClipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoClipButton.Font = Enum.Font.Gotham
+NoClipButton.TextSize = 14
+
+local noclip = false
+NoClipButton.MouseButton1Click:Connect(function()
+    noclip = not noclip
+    NoClipButton.Text = noclip and "Noclip [ON]" or "Noclip [OFF]"
+    game:GetService("RunService").Stepped:Connect(function()
+        if noclip and game.Players.LocalPlayer.Character then
+            for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end)
+
+-- Set Time of Day
+local TimeSlider = Instance.new("TextBox")
+TimeSlider.Parent = AdminTab
+TimeSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+TimeSlider.Size = UDim2.new(1, -20, 0, 30)
+TimeSlider.Position = UDim2.new(0, 10, 0, 130)
+TimeSlider.Text = "Set Time (0-24)"
+TimeSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+TimeSlider.Font = Enum.Font.Gotham
+TimeSlider.TextSize = 14
+
+TimeSlider.FocusLost:Connect(function()
+    local time = tonumber(TimeSlider.Text:match("%d+"))
+    if time and time >= 0 and time <= 24 then
+        game.Lighting.TimeOfDay = tostring(time) .. ":00:00"
+        TimeSlider.Text = "Time: " .. time
+    else
+        TimeSlider.Text = "Invalid Time"
+    end
+end)
+
+-- Brightness Slider
+local BrightnessSlider = Instance.new("TextBox")
+BrightnessSlider.Parent = UtilitiesTab
+BrightnessSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+BrightnessSlider.Size = UDim2.new(1, -20, 0, 30)
+BrightnessSlider.Position = UDim2.new(0, 10, 0, 50)
+BrightnessSlider.Text = "Brightness: 2"
+BrightnessSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+BrightnessSlider.Font = Enum.Font.Gotham
+BrightnessSlider.TextSize = 14
+
+BrightnessSlider.FocusLost:Connect(function()
+    local brightness = tonumber(BrightnessSlider.Text:match("%d+"))
+    if brightness then
+        game.Lighting.Brightness = brightness
+        BrightnessSlider.Text = "Brightness: " .. brightness
+    end
+end)
+
+-- Field of View Slider
+local FOVSlider = Instance.new("TextBox")
+FOVSlider.Parent = UtilitiesTab
+FOVSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+FOVSlider.Size = UDim2.new(1, -20, 0, 30)
+FOVSlider.Position = UDim2.new(0, 10, 0, 10)
+FOVSlider.Text = "FOV: 70"
+FOVSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+FOVSlider.Font = Enum.Font.Gotham
+FOVSlider.TextSize = 14
+
+FOVSlider.FocusLost:Connect(function()
+    local fov = tonumber(FOVSlider.Text:match("%d+"))
+    if fov and fov >= 70 and fov <= 120 then
+        workspace.CurrentCamera.FieldOfView = fov
+        FOVSlider.Text = "FOV: " .. fov
+    else
+        FOVSlider.Text = "Invalid FOV"
+    end
+end)
+
+-- ESP Toggle
+local ESPButton = Instance.new("TextButton")
+ESPButton.Parent = UtilitiesTab
+ESPButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+ESPButton.Size = UDim2.new(1, -20, 0, 30)
+ESPButton.Position = UDim2.new(0, 10, 0, 90)
+ESPButton.Text = "Enable ESP"
+ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESPButton.Font = Enum.Font.Gotham
+ESPButton.TextSize = 14
+
+local espEnabled = false
+local highlights = {}
+
+ESPButton.MouseButton1Click:Connect(function()
+    espEnabled = not espEnabled
+    ESPButton.Text = espEnabled and "Disable ESP" or "Enable ESP"
+
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer then
+            if espEnabled then
+                if player.Character and not highlights[player.Name] then
+                    local highlight = Instance.new("Highlight")
+                    highlight.Adornee = player.Character
+                    highlight.Parent = player.Character
+                    highlight.FillColor = Color3.new(0, 1, 0)
+                    highlight.OutlineColor = Color3.new(1, 1, 1)
+                    highlights[player.Name] = highlight
+                end
+            else
+                if highlights[player.Name] then
+                    highlights[player.Name]:Destroy()
+                    highlights[player.Name] = nil
+                end
+            end
+        end
     end
 end)
 
@@ -161,12 +293,31 @@ JumpPowerSlider.FocusLost:Connect(function()
     end
 end)
 
+-- Gravity Slider
+local GravitySlider = Instance.new("TextBox")
+GravitySlider.Parent = PlayerTab
+GravitySlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+GravitySlider.Size = UDim2.new(1, -20, 0, 30)
+GravitySlider.Position = UDim2.new(0, 10, 0, 90)
+GravitySlider.Text = "Gravity: 196.2"
+GravitySlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+GravitySlider.Font = Enum.Font.Gotham
+GravitySlider.TextSize = 14
+
+GravitySlider.FocusLost:Connect(function()
+    local gravity = tonumber(GravitySlider.Text:match("%d+"))
+    if gravity then
+        workspace.Gravity = gravity
+        GravitySlider.Text = "Gravity: " .. gravity
+    end
+end)
+
 -- Teleport to Player
 local TeleportBox = Instance.new("TextBox")
 TeleportBox.Parent = PlayerTab
 TeleportBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 TeleportBox.Size = UDim2.new(1, -20, 0, 30)
-TeleportBox.Position = UDim2.new(0, 10, 0, 90)
+TeleportBox.Position = UDim2.new(0, 10, 0, 130)
 TeleportBox.Text = "Enter Player Name"
 TeleportBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TeleportBox.Font = Enum.Font.Gotham
@@ -180,139 +331,6 @@ TeleportBox.FocusLost:Connect(function()
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
     else
         TeleportBox.Text = "Player not found"
-    end
-end)
-
--- Tabs Switching Logic
-AdminTabButton.MouseButton1Click:Connect(function()
-    AdminTab.Visible = true
-    UtilitiesTab.Visible = false
-    PlayerTab.Visible = false
-end)
-
-UtilitiesTabButton.MouseButton1Click:Connect(function()
-    AdminTab.Visible = false
-    UtilitiesTab.Visible = true
-    PlayerTab.Visible = false
-end)
-
-PlayerTabButton.MouseButton1Click:Connect(function()
-    AdminTab.Visible = false
-    UtilitiesTab.Visible = false
-    PlayerTab.Visible = true
-end)
-
--- Noclip Toggle
-local NoClipButton = Instance.new("TextButton")
-NoClipButton.Parent = AdminTab
-NoClipButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-NoClipButton.Size = UDim2.new(1, -20, 0, 30)
-NoClipButton.Position = UDim2.new(0, 10, 0, 90)
-NoClipButton.Text = "Noclip [OFF]"
-NoClipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-NoClipButton.Font = Enum.Font.Gotham
-NoClipButton.TextSize = 14
-
-local noclip = false
-NoClipButton.MouseButton1Click:Connect(function()
-    noclip = not noclip
-    NoClipButton.Text = noclip and "Noclip [ON]" or "Noclip [OFF]"
-    game:GetService("RunService").Stepped:Connect(function()
-        if noclip and game.Players.LocalPlayer.Character then
-            for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = false
-                end
-            end
-        end
-    end)
-end)
-
--- ESP Toggle
-local ESPButton = Instance.new("TextButton")
-ESPButton.Parent = UtilitiesTab
-ESPButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-ESPButton.Size = UDim2.new(1, -20, 0, 30)
-ESPButton.Position = UDim2.new(0, 10, 0, 10)
-ESPButton.Text = "Enable ESP"
-ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ESPButton.Font = Enum.Font.Gotham
-ESPButton.TextSize = 14
-
-local espEnabled = false
-local highlights = {}
-
-ESPButton.MouseButton1Click:Connect(function()
-    espEnabled = not espEnabled
-    ESPButton.Text = espEnabled and "Disable ESP" or "Enable ESP"
-
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player ~= game.Players.LocalPlayer then
-            if espEnabled then
-                if player.Character and not highlights[player.Name] then
-                    local highlight = Instance.new("Highlight")
-                    highlight.Adornee = player.Character
-                    highlight.Parent = player.Character
-                    highlight.FillColor = Color3.new(0, 1, 0)
-                    highlight.OutlineColor = Color3.new(1, 1, 1)
-                    highlights[player.Name] = highlight
-                end
-            else
-                if highlights[player.Name] then
-                    highlights[player.Name]:Destroy()
-                    highlights[player.Name] = nil
-                end
-            end
-        end
-    end
-end)
-
--- Fly Mode
-local FlyButton = Instance.new("TextButton")
-FlyButton.Parent = PlayerTab
-FlyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-FlyButton.Size = UDim2.new(1, -20, 0, 30)
-FlyButton.Position = UDim2.new(0, 10, 0, 130)
-FlyButton.Text = "Fly [OFF]"
-FlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-FlyButton.Font = Enum.Font.Gotham
-FlyButton.TextSize = 14
-
-local flying = false
-local flySpeed = 50
-
-FlyButton.MouseButton1Click:Connect(function()
-    flying = not flying
-    FlyButton.Text = flying and "Fly [ON]" or "Fly [OFF]"
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-
-    if flying and humanoidRootPart then
-        game:GetService("RunService").RenderStepped:Connect(function()
-            if flying then
-                humanoidRootPart.Velocity = humanoidRootPart.CFrame.LookVector * flySpeed
-            end
-        end)
-    end
-end)
-
--- Brightness Slider
-local BrightnessSlider = Instance.new("TextBox")
-BrightnessSlider.Parent = UtilitiesTab
-BrightnessSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-BrightnessSlider.Size = UDim2.new(1, -20, 0, 30)
-BrightnessSlider.Position = UDim2.new(0, 10, 0, 50)
-BrightnessSlider.Text = "Brightness: 2"
-BrightnessSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-BrightnessSlider.Font = Enum.Font.Gotham
-BrightnessSlider.TextSize = 14
-
-BrightnessSlider.FocusLost:Connect(function()
-    local brightness = tonumber(BrightnessSlider.Text:match("%d+"))
-    if brightness then
-        game.Lighting.Brightness = brightness
-        BrightnessSlider.Text = "Brightness: " .. brightness
     end
 end)
 
