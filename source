@@ -18,8 +18,8 @@ ScreenGui.Parent = game.CoreGui
 -- Main Frame
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-MainFrame.Size = UDim2.new(0, 400, 0, 500)
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
+MainFrame.Size = UDim2.new(0, 400, 0, 550)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -275)
 MainFrame.Active = true
 MainFrame.Draggable = true
 
@@ -27,7 +27,7 @@ MainFrame.Draggable = true
 Title.Parent = MainFrame
 Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Text = "Advanced GUI"
+Title.Text = "Ultimate Advanced GUI"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -90,30 +90,47 @@ InfiniteYieldButton.MouseButton1Click:Connect(function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 end)
 
--- Noclip Toggle
-local NoClipButton = Instance.new("TextButton")
-NoClipButton.Parent = AdminTab
-NoClipButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-NoClipButton.Size = UDim2.new(1, -20, 0, 30)
-NoClipButton.Position = UDim2.new(0, 10, 0, 50)
-NoClipButton.Text = "Noclip [OFF]"
-NoClipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-NoClipButton.Font = Enum.Font.Gotham
-NoClipButton.TextSize = 14
+-- Kill All Players Button
+local KillAllButton = Instance.new("TextButton")
+KillAllButton.Parent = AdminTab
+KillAllButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+KillAllButton.Size = UDim2.new(1, -20, 0, 30)
+KillAllButton.Position = UDim2.new(0, 10, 0, 50)
+KillAllButton.Text = "Kill All Players"
+KillAllButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+KillAllButton.Font = Enum.Font.Gotham
+KillAllButton.TextSize = 14
 
-local noclip = false
-NoClipButton.MouseButton1Click:Connect(function()
-    noclip = not noclip
-    NoClipButton.Text = noclip and "Noclip [ON]" or "Noclip [OFF]"
-    game:GetService("RunService").Stepped:Connect(function()
-        if noclip and game.Players.LocalPlayer.Character then
-            for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = false
-                end
-            end
+KillAllButton.MouseButton1Click:Connect(function()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") then
+            player.Character.Humanoid.Health = 0
         end
-    end)
+    end
+end)
+
+-- God Mode Toggle
+local GodModeButton = Instance.new("TextButton")
+GodModeButton.Parent = AdminTab
+GodModeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+GodModeButton.Size = UDim2.new(1, -20, 0, 30)
+GodModeButton.Position = UDim2.new(0, 10, 0, 90)
+GodModeButton.Text = "God Mode [OFF]"
+GodModeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodModeButton.Font = Enum.Font.Gotham
+GodModeButton.TextSize = 14
+
+local godMode = false
+GodModeButton.MouseButton1Click:Connect(function()
+    godMode = not godMode
+    GodModeButton.Text = godMode and "God Mode [ON]" or "God Mode [OFF]"
+    if godMode and game.Players.LocalPlayer.Character then
+        local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            humanoid.MaxHealth = math.huge
+            humanoid.Health = humanoid.MaxHealth
+        end
+    end
 end)
 
 -- Utilities Tab
@@ -123,32 +140,60 @@ UtilitiesTab.Size = UDim2.new(1, 0, 0.8, -60)
 UtilitiesTab.Position = UDim2.new(0, 0, 0.2, 0)
 UtilitiesTab.Visible = false
 
--- ESP Toggle
-local ESPButton = Instance.new("TextButton")
-ESPButton.Parent = UtilitiesTab
-ESPButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-ESPButton.Size = UDim2.new(1, -20, 0, 30)
-ESPButton.Position = UDim2.new(0, 10, 0, 10)
-ESPButton.Text = "Enable ESP"
-ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ESPButton.Font = Enum.Font.Gotham
-ESPButton.TextSize = 14
+-- Field of View Slider
+local FOVSlider = Instance.new("TextBox")
+FOVSlider.Parent = UtilitiesTab
+FOVSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+FOVSlider.Size = UDim2.new(1, -20, 0, 30)
+FOVSlider.Position = UDim2.new(0, 10, 0, 10)
+FOVSlider.Text = "FOV: 70"
+FOVSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+FOVSlider.Font = Enum.Font.Gotham
+FOVSlider.TextSize = 14
 
-local espEnabled = false
-ESPButton.MouseButton1Click:Connect(function()
-    espEnabled = not espEnabled
-    ESPButton.Text = espEnabled and "Disable ESP" or "Enable ESP"
-    for _, player in pairs(game.Players:GetPlayers()) do
-        local highlight = player.Character:FindFirstChildOfClass("Highlight")
-        if espEnabled then
-            if not highlight and player ~= game.Players.LocalPlayer then
-                highlight = Instance.new("Highlight")
-                highlight.Parent = player.Character
-                highlight.FillColor = Color3.new(0, 1, 0)
-            end
-        elseif highlight then
-            highlight:Destroy()
+FOVSlider.FocusLost:Connect(function()
+    local fov = tonumber(FOVSlider.Text:match("%d+"))
+    if fov then
+        workspace.CurrentCamera.FieldOfView = fov
+        FOVSlider.Text = "FOV: " .. fov
+    end
+end)
+
+-- Delete Map Button
+local DeleteMapButton = Instance.new("TextButton")
+DeleteMapButton.Parent = UtilitiesTab
+DeleteMapButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+DeleteMapButton.Size = UDim2.new(1, -20, 0, 30)
+DeleteMapButton.Position = UDim2.new(0, 10, 0, 50)
+DeleteMapButton.Text = "Delete Map"
+DeleteMapButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DeleteMapButton.Font = Enum.Font.Gotham
+DeleteMapButton.TextSize = 14
+
+DeleteMapButton.MouseButton1Click:Connect(function()
+    for _, object in pairs(workspace:GetChildren()) do
+        if not object:IsA("Camera") and not object:IsA("Terrain") then
+            object:Destroy()
         end
+    end
+end)
+
+-- Brightness Slider
+local BrightnessSlider = Instance.new("TextBox")
+BrightnessSlider.Parent = UtilitiesTab
+BrightnessSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+BrightnessSlider.Size = UDim2.new(1, -20, 0, 30)
+BrightnessSlider.Position = UDim2.new(0, 10, 0, 90)
+BrightnessSlider.Text = "Brightness: 2"
+BrightnessSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+BrightnessSlider.Font = Enum.Font.Gotham
+BrightnessSlider.TextSize = 14
+
+BrightnessSlider.FocusLost:Connect(function()
+    local brightness = tonumber(BrightnessSlider.Text:match("%d+"))
+    if brightness then
+        game.Lighting.Brightness = brightness
+        BrightnessSlider.Text = "Brightness: " .. brightness
     end
 end)
 
@@ -159,112 +204,66 @@ PlayerTab.Size = UDim2.new(1, 0, 0.8, -60)
 PlayerTab.Position = UDim2.new(0, 0, 0.2, 0)
 PlayerTab.Visible = false
 
--- WalkSpeed Slider
-local WalkSpeedSlider = Instance.new("TextBox")
-WalkSpeedSlider.Parent = PlayerTab
-WalkSpeedSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-WalkSpeedSlider.Size = UDim2.new(1, -20, 0, 30)
-WalkSpeedSlider.Position = UDim2.new(0, 10, 0, 10)
-WalkSpeedSlider.Text = "WalkSpeed: 16"
-WalkSpeedSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-WalkSpeedSlider.Font = Enum.Font.Gotham
-WalkSpeedSlider.TextSize = 14
+-- Reset Character Button
+local ResetButton = Instance.new("TextButton")
+ResetButton.Parent = PlayerTab
+ResetButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+ResetButton.Size = UDim2.new(1, -20, 0, 30)
+ResetButton.Position = UDim2.new(0, 10, 0, 10)
+ResetButton.Text = "Reset Character"
+ResetButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ResetButton.Font = Enum.Font.Gotham
+ResetButton.TextSize = 14
 
-local player = game.Players.LocalPlayer
-WalkSpeedSlider.FocusLost:Connect(function()
-    local speed = tonumber(WalkSpeedSlider.Text:match("%d+"))
-    if speed then
-        player.Character.Humanoid.WalkSpeed = speed
-        WalkSpeedSlider.Text = "WalkSpeed: " .. speed
-    end
+ResetButton.MouseButton1Click:Connect(function()
+    game.Players.LocalPlayer.Character:BreakJoints()
 end)
 
--- JumpPower Slider
-local JumpPowerSlider = Instance.new("TextBox")
-JumpPowerSlider.Parent = PlayerTab
-JumpPowerSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-JumpPowerSlider.Size = UDim2.new(1, -20, 0, 30)
-JumpPowerSlider.Position = UDim2.new(0, 10, 0, 50)
-JumpPowerSlider.Text = "JumpPower: 50"
-JumpPowerSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-JumpPowerSlider.Font = Enum.Font.Gotham
-JumpPowerSlider.TextSize = 14
+-- Invisibility/Visibility Toggle
+local InvisibleButton = Instance.new("TextButton")
+InvisibleButton.Parent = PlayerTab
+InvisibleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+InvisibleButton.Size = UDim2.new(1, -20, 0, 30)
+InvisibleButton.Position = UDim2.new(0, 10, 0, 50)
+InvisibleButton.Text = "Become Invisible"
+InvisibleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+InvisibleButton.Font = Enum.Font.Gotham
+InvisibleButton.TextSize = 14
 
-JumpPowerSlider.FocusLost:Connect(function()
-    local power = tonumber(JumpPowerSlider.Text:match("%d+"))
-    if power then
-        player.Character.Humanoid.JumpPower = power
-        JumpPowerSlider.Text = "JumpPower: " .. power
-    end
-end)
-
--- Gravity Slider
-local GravitySlider = Instance.new("TextBox")
-GravitySlider.Parent = PlayerTab
-GravitySlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-GravitySlider.Size = UDim2.new(1, -20, 0, 30)
-GravitySlider.Position = UDim2.new(0, 10, 0, 90)
-GravitySlider.Text = "Gravity: 196.2"
-GravitySlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-GravitySlider.Font = Enum.Font.Gotham
-GravitySlider.TextSize = 14
-
-GravitySlider.FocusLost:Connect(function()
-    local gravity = tonumber(GravitySlider.Text:match("%d+"))
-    if gravity then
-        workspace.Gravity = gravity
-        GravitySlider.Text = "Gravity: " .. gravity
-    end
-end)
-
--- Fly Toggle and Speed
-local FlyButton = Instance.new("TextButton")
-FlyButton.Parent = PlayerTab
-FlyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-FlyButton.Size = UDim2.new(1, -20, 0, 30)
-FlyButton.Position = UDim2.new(0, 10, 0, 130)
-FlyButton.Text = "Fly [OFF]"
-FlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-FlyButton.Font = Enum.Font.Gotham
-FlyButton.TextSize = 14
-
-local flying = false
-FlyButton.MouseButton1Click:Connect(function()
-    flying = not flying
-    FlyButton.Text = flying and "Fly [ON]" or "Fly [OFF]"
-    local character = player.Character
-    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
-
-    if flying and humanoidRootPart then
-        local flySpeed = 50
-        game:GetService("RunService").RenderStepped:Connect(function()
-            if flying then
-                humanoidRootPart.Velocity = humanoidRootPart.CFrame.LookVector * flySpeed
+local invisible = false
+InvisibleButton.MouseButton1Click:Connect(function()
+    invisible = not invisible
+    InvisibleButton.Text = invisible and "Become Visible" or "Become Invisible"
+    local character = game.Players.LocalPlayer.Character
+    if character then
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Transparency = invisible and 1 or 0
+            elseif part:IsA("Decal") then
+                part.Transparency = invisible and 1 or 0
             end
-        end)
+        end
     end
 end)
 
--- Teleport to Player
-local TeleportBox = Instance.new("TextBox")
-TeleportBox.Parent = PlayerTab
-TeleportBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-TeleportBox.Size = UDim2.new(1, -20, 0, 30)
-TeleportBox.Position = UDim2.new(0, 10, 0, 170)
-TeleportBox.Text = "Enter Player Name"
-TeleportBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-TeleportBox.Font = Enum.Font.Gotham
-TeleportBox.TextSize = 14
+-- Speed Boost Toggle
+local SpeedBoostButton = Instance.new("TextButton")
+SpeedBoostButton.Parent = PlayerTab
+SpeedBoostButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+SpeedBoostButton.Size = UDim2.new(1, -20, 0, 30)
+SpeedBoostButton.Position = UDim2.new(0, 10, 0, 90)
+SpeedBoostButton.Text = "Speed Boost [OFF]"
+SpeedBoostButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SpeedBoostButton.Font = Enum.Font.Gotham
+SpeedBoostButton.TextSize = 14
 
-TeleportBox.FocusLost:Connect(function()
-    local targetPlayerName = TeleportBox.Text
-    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-
-    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        local targetPosition = targetPlayer.Character.HumanoidRootPart.CFrame
-        player.Character.HumanoidRootPart.CFrame = targetPosition
-    else
-        TeleportBox.Text = "Player not found"
+local speedBoost = false
+SpeedBoostButton.MouseButton1Click:Connect(function()
+    speedBoost = not speedBoost
+    SpeedBoostButton.Text = speedBoost and "Speed Boost [ON]" or "Speed Boost [OFF]"
+    local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = speedBoost and 100 or 16
     end
 end)
 
