@@ -1,0 +1,288 @@
+-- Main GUI Creation
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local Tabs = Instance.new("Frame")
+local AdminTabButton = Instance.new("TextButton")
+local UtilitiesTabButton = Instance.new("TextButton")
+local PlayerTabButton = Instance.new("TextButton")
+
+-- Tabs
+local AdminTab = Instance.new("Frame")
+local UtilitiesTab = Instance.new("Frame")
+local PlayerTab = Instance.new("Frame")
+
+-- Parent GUI to Player's Screen
+ScreenGui.Parent = game.CoreGui
+
+-- Main Frame
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+MainFrame.Size = UDim2.new(0, 400, 0, 500)
+MainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+-- Title
+Title.Parent = MainFrame
+Title.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.Text = "Advanced GUI"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+
+-- Tabs
+Tabs.Parent = MainFrame
+Tabs.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Tabs.Size = UDim2.new(1, 0, 0, 40)
+Tabs.Position = UDim2.new(0, 0, 0.1, 0)
+
+-- Admin Tab Button
+AdminTabButton.Parent = Tabs
+AdminTabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+AdminTabButton.Size = UDim2.new(0.33, -5, 1, 0)
+AdminTabButton.Position = UDim2.new(0, 0, 0, 0)
+AdminTabButton.Text = "Admin"
+AdminTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+AdminTabButton.Font = Enum.Font.Gotham
+AdminTabButton.TextSize = 14
+
+-- Utilities Tab Button
+UtilitiesTabButton.Parent = Tabs
+UtilitiesTabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+UtilitiesTabButton.Size = UDim2.new(0.33, -5, 1, 0)
+UtilitiesTabButton.Position = UDim2.new(0.33, 5, 0, 0)
+UtilitiesTabButton.Text = "Utilities"
+UtilitiesTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+UtilitiesTabButton.Font = Enum.Font.Gotham
+UtilitiesTabButton.TextSize = 14
+
+-- Player Tab Button
+PlayerTabButton.Parent = Tabs
+PlayerTabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+PlayerTabButton.Size = UDim2.new(0.33, -5, 1, 0)
+PlayerTabButton.Position = UDim2.new(0.66, 5, 0, 0)
+PlayerTabButton.Text = "Player"
+PlayerTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerTabButton.Font = Enum.Font.Gotham
+PlayerTabButton.TextSize = 14
+
+-- Admin Tab
+AdminTab.Parent = MainFrame
+AdminTab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+AdminTab.Size = UDim2.new(1, 0, 0.8, -60)
+AdminTab.Position = UDim2.new(0, 0, 0.2, 0)
+AdminTab.Visible = true
+
+-- Infinite Yield Button
+local InfiniteYieldButton = Instance.new("TextButton")
+InfiniteYieldButton.Parent = AdminTab
+InfiniteYieldButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+InfiniteYieldButton.Size = UDim2.new(1, -20, 0, 30)
+InfiniteYieldButton.Position = UDim2.new(0, 10, 0, 10)
+InfiniteYieldButton.Text = "Load Infinite Yield"
+InfiniteYieldButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+InfiniteYieldButton.Font = Enum.Font.Gotham
+InfiniteYieldButton.TextSize = 14
+
+InfiniteYieldButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
+
+-- Noclip Toggle
+local NoClipButton = Instance.new("TextButton")
+NoClipButton.Parent = AdminTab
+NoClipButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+NoClipButton.Size = UDim2.new(1, -20, 0, 30)
+NoClipButton.Position = UDim2.new(0, 10, 0, 50)
+NoClipButton.Text = "Noclip [OFF]"
+NoClipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+NoClipButton.Font = Enum.Font.Gotham
+NoClipButton.TextSize = 14
+
+local noclip = false
+NoClipButton.MouseButton1Click:Connect(function()
+    noclip = not noclip
+    NoClipButton.Text = noclip and "Noclip [ON]" or "Noclip [OFF]"
+    game:GetService("RunService").Stepped:Connect(function()
+        if noclip and game.Players.LocalPlayer.Character then
+            for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+end)
+
+-- Utilities Tab
+UtilitiesTab.Parent = MainFrame
+UtilitiesTab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+UtilitiesTab.Size = UDim2.new(1, 0, 0.8, -60)
+UtilitiesTab.Position = UDim2.new(0, 0, 0.2, 0)
+UtilitiesTab.Visible = false
+
+-- ESP Toggle
+local ESPButton = Instance.new("TextButton")
+ESPButton.Parent = UtilitiesTab
+ESPButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+ESPButton.Size = UDim2.new(1, -20, 0, 30)
+ESPButton.Position = UDim2.new(0, 10, 0, 10)
+ESPButton.Text = "Enable ESP"
+ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESPButton.Font = Enum.Font.Gotham
+ESPButton.TextSize = 14
+
+local espEnabled = false
+ESPButton.MouseButton1Click:Connect(function()
+    espEnabled = not espEnabled
+    ESPButton.Text = espEnabled and "Disable ESP" or "Enable ESP"
+    for _, player in pairs(game.Players:GetPlayers()) do
+        local highlight = player.Character:FindFirstChildOfClass("Highlight")
+        if espEnabled then
+            if not highlight and player ~= game.Players.LocalPlayer then
+                highlight = Instance.new("Highlight")
+                highlight.Parent = player.Character
+                highlight.FillColor = Color3.new(0, 1, 0)
+            end
+        elseif highlight then
+            highlight:Destroy()
+        end
+    end
+end)
+
+-- Player Tab
+PlayerTab.Parent = MainFrame
+PlayerTab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+PlayerTab.Size = UDim2.new(1, 0, 0.8, -60)
+PlayerTab.Position = UDim2.new(0, 0, 0.2, 0)
+PlayerTab.Visible = false
+
+-- WalkSpeed Slider
+local WalkSpeedSlider = Instance.new("TextBox")
+WalkSpeedSlider.Parent = PlayerTab
+WalkSpeedSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+WalkSpeedSlider.Size = UDim2.new(1, -20, 0, 30)
+WalkSpeedSlider.Position = UDim2.new(0, 10, 0, 10)
+WalkSpeedSlider.Text = "WalkSpeed: 16"
+WalkSpeedSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+WalkSpeedSlider.Font = Enum.Font.Gotham
+WalkSpeedSlider.TextSize = 14
+
+local player = game.Players.LocalPlayer
+WalkSpeedSlider.FocusLost:Connect(function()
+    local speed = tonumber(WalkSpeedSlider.Text:match("%d+"))
+    if speed then
+        player.Character.Humanoid.WalkSpeed = speed
+        WalkSpeedSlider.Text = "WalkSpeed: " .. speed
+    end
+end)
+
+-- JumpPower Slider
+local JumpPowerSlider = Instance.new("TextBox")
+JumpPowerSlider.Parent = PlayerTab
+JumpPowerSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+JumpPowerSlider.Size = UDim2.new(1, -20, 0, 30)
+JumpPowerSlider.Position = UDim2.new(0, 10, 0, 50)
+JumpPowerSlider.Text = "JumpPower: 50"
+JumpPowerSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+JumpPowerSlider.Font = Enum.Font.Gotham
+JumpPowerSlider.TextSize = 14
+
+JumpPowerSlider.FocusLost:Connect(function()
+    local power = tonumber(JumpPowerSlider.Text:match("%d+"))
+    if power then
+        player.Character.Humanoid.JumpPower = power
+        JumpPowerSlider.Text = "JumpPower: " .. power
+    end
+end)
+
+-- Gravity Slider
+local GravitySlider = Instance.new("TextBox")
+GravitySlider.Parent = PlayerTab
+GravitySlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+GravitySlider.Size = UDim2.new(1, -20, 0, 30)
+GravitySlider.Position = UDim2.new(0, 10, 0, 90)
+GravitySlider.Text = "Gravity: 196.2"
+GravitySlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+GravitySlider.Font = Enum.Font.Gotham
+GravitySlider.TextSize = 14
+
+GravitySlider.FocusLost:Connect(function()
+    local gravity = tonumber(GravitySlider.Text:match("%d+"))
+    if gravity then
+        workspace.Gravity = gravity
+        GravitySlider.Text = "Gravity: " .. gravity
+    end
+end)
+
+-- Fly Toggle and Speed
+local FlyButton = Instance.new("TextButton")
+FlyButton.Parent = PlayerTab
+FlyButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+FlyButton.Size = UDim2.new(1, -20, 0, 30)
+FlyButton.Position = UDim2.new(0, 10, 0, 130)
+FlyButton.Text = "Fly [OFF]"
+FlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+FlyButton.Font = Enum.Font.Gotham
+FlyButton.TextSize = 14
+
+local flying = false
+FlyButton.MouseButton1Click:Connect(function()
+    flying = not flying
+    FlyButton.Text = flying and "Fly [ON]" or "Fly [OFF]"
+    local character = player.Character
+    local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+
+    if flying and humanoidRootPart then
+        local flySpeed = 50
+        game:GetService("RunService").RenderStepped:Connect(function()
+            if flying then
+                humanoidRootPart.Velocity = humanoidRootPart.CFrame.LookVector * flySpeed
+            end
+        end)
+    end
+end)
+
+-- Teleport to Player
+local TeleportBox = Instance.new("TextBox")
+TeleportBox.Parent = PlayerTab
+TeleportBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+TeleportBox.Size = UDim2.new(1, -20, 0, 30)
+TeleportBox.Position = UDim2.new(0, 10, 0, 170)
+TeleportBox.Text = "Enter Player Name"
+TeleportBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TeleportBox.Font = Enum.Font.Gotham
+TeleportBox.TextSize = 14
+
+TeleportBox.FocusLost:Connect(function()
+    local targetPlayerName = TeleportBox.Text
+    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.CFrame
+        player.Character.HumanoidRootPart.CFrame = targetPosition
+    else
+        TeleportBox.Text = "Player not found"
+    end
+end)
+
+-- Tabs Switching Logic
+AdminTabButton.MouseButton1Click:Connect(function()
+    AdminTab.Visible = true
+    UtilitiesTab.Visible = false
+    PlayerTab.Visible = false
+end)
+
+UtilitiesTabButton.MouseButton1Click:Connect(function()
+    AdminTab.Visible = false
+    UtilitiesTab.Visible = true
+    PlayerTab.Visible = false
+end)
+
+PlayerTabButton.MouseButton1Click:Connect(function()
+    AdminTab.Visible = false
+    UtilitiesTab.Visible = false
+    PlayerTab.Visible = true
+end)
