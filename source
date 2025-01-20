@@ -104,6 +104,67 @@ InfiniteYieldButton.MouseButton1Click:Connect(function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 end)
 
+-- ESP Button
+local ESPButton = Instance.new("TextButton")
+ESPButton.Parent = UtilitiesTab
+ESPButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+ESPButton.Size = UDim2.new(1, -20, 0, 30)
+ESPButton.Position = UDim2.new(0, 10, 0, 90)
+ESPButton.Text = "Enable ESP"
+ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ESPButton.Font = Enum.Font.Gotham
+ESPButton.TextSize = 14
+
+local espEnabled = false
+ESPButton.MouseButton1Click:Connect(function()
+    espEnabled = not espEnabled
+    if espEnabled then
+        ESPButton.Text = "Disable ESP"
+        loadstring(game:HttpGet('https://pastebin.com/raw/zzhc9DPv'))()
+    else
+        ESPButton.Text = "Enable ESP"
+        loadstring(game:HttpGet('https://pastebin.com/raw/6sEwWX4V'))()
+    end
+end)
+
+-- WalkSpeed Slider
+local WalkSpeedSlider = Instance.new("TextBox")
+WalkSpeedSlider.Parent = PlayerTab
+WalkSpeedSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+WalkSpeedSlider.Size = UDim2.new(1, -20, 0, 30)
+WalkSpeedSlider.Position = UDim2.new(0, 10, 0, 10)
+WalkSpeedSlider.Text = "WalkSpeed: 16"
+WalkSpeedSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+WalkSpeedSlider.Font = Enum.Font.Gotham
+WalkSpeedSlider.TextSize = 14
+
+WalkSpeedSlider.FocusLost:Connect(function()
+    local speed = tonumber(WalkSpeedSlider.Text:match("%d+"))
+    if speed then
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
+        WalkSpeedSlider.Text = "WalkSpeed: " .. speed
+    end
+end)
+
+-- JumpPower Slider
+local JumpPowerSlider = Instance.new("TextBox")
+JumpPowerSlider.Parent = PlayerTab
+JumpPowerSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+JumpPowerSlider.Size = UDim2.new(1, -20, 0, 30)
+JumpPowerSlider.Position = UDim2.new(0, 10, 0, 50)
+JumpPowerSlider.Text = "JumpPower: 50"
+JumpPowerSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
+JumpPowerSlider.Font = Enum.Font.Gotham
+JumpPowerSlider.TextSize = 14
+
+JumpPowerSlider.FocusLost:Connect(function()
+    local power = tonumber(JumpPowerSlider.Text:match("%d+"))
+    if power then
+        game.Players.LocalPlayer.Character.Humanoid.JumpPower = power
+        JumpPowerSlider.Text = "JumpPower: " .. power
+    end
+end)
+
 -- God Mode Toggle
 local GodModeButton = Instance.new("TextButton")
 GodModeButton.Parent = AdminTab
@@ -173,99 +234,6 @@ TimeSlider.FocusLost:Connect(function()
         TimeSlider.Text = "Time: " .. time
     else
         TimeSlider.Text = "Invalid Time"
-    end
-end)
-
--- Brightness Slider
-local BrightnessSlider = Instance.new("TextBox")
-BrightnessSlider.Parent = UtilitiesTab
-BrightnessSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-BrightnessSlider.Size = UDim2.new(1, -20, 0, 30)
-BrightnessSlider.Position = UDim2.new(0, 10, 0, 50)
-BrightnessSlider.Text = "Brightness: 2"
-BrightnessSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-BrightnessSlider.Font = Enum.Font.Gotham
-BrightnessSlider.TextSize = 14
-
-BrightnessSlider.FocusLost:Connect(function()
-    local brightness = tonumber(BrightnessSlider.Text:match("%d+"))
-    if brightness then
-        game.Lighting.Brightness = brightness
-        BrightnessSlider.Text = "Brightness: " .. brightness
-    end
-end)
-
--- Field of View Slider
-local FOVSlider = Instance.new("TextBox")
-FOVSlider.Parent = UtilitiesTab
-FOVSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-FOVSlider.Size = UDim2.new(1, -20, 0, 30)
-FOVSlider.Position = UDim2.new(0, 10, 0, 10)
-FOVSlider.Text = "FOV: 70"
-FOVSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-FOVSlider.Font = Enum.Font.Gotham
-FOVSlider.TextSize = 14
-
-FOVSlider.FocusLost:Connect(function()
-    local fov = tonumber(FOVSlider.Text:match("%d+"))
-    if fov and fov >= 70 and fov <= 120 then
-        workspace.CurrentCamera.FieldOfView = fov
-        FOVSlider.Text = "FOV: " .. fov
-    else
-        FOVSlider.Text = "Invalid FOV"
-    end
-end)
-
--- ESP Toggle
-local ESPButton = Instance.new("TextButton")
-ESPButton.Parent = UtilitiesTab
-ESPButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-ESPButton.Size = UDim2.new(1, -20, 0, 30)
-ESPButton.Position = UDim2.new(0, 10, 0, 90)
-ESPButton.Text = "Enable ESP"
-ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ESPButton.Font = Enum.Font.Gotham
-ESPButton.TextSize = 14
-
-ESPButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet('https://pastebin.com/raw/zzhc9DPv'))()
-end)
-
--- WalkSpeed Slider
-local WalkSpeedSlider = Instance.new("TextBox")
-WalkSpeedSlider.Parent = PlayerTab
-WalkSpeedSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-WalkSpeedSlider.Size = UDim2.new(1, -20, 0, 30)
-WalkSpeedSlider.Position = UDim2.new(0, 10, 0, 10)
-WalkSpeedSlider.Text = "WalkSpeed: 16"
-WalkSpeedSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-WalkSpeedSlider.Font = Enum.Font.Gotham
-WalkSpeedSlider.TextSize = 14
-
-WalkSpeedSlider.FocusLost:Connect(function()
-    local speed = tonumber(WalkSpeedSlider.Text:match("%d+"))
-    if speed then
-        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
-        WalkSpeedSlider.Text = "WalkSpeed: " .. speed
-    end
-end)
-
--- JumpPower Slider
-local JumpPowerSlider = Instance.new("TextBox")
-JumpPowerSlider.Parent = PlayerTab
-JumpPowerSlider.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-JumpPowerSlider.Size = UDim2.new(1, -20, 0, 30)
-JumpPowerSlider.Position = UDim2.new(0, 10, 0, 50)
-JumpPowerSlider.Text = "JumpPower: 50"
-JumpPowerSlider.TextColor3 = Color3.fromRGB(255, 255, 255)
-JumpPowerSlider.Font = Enum.Font.Gotham
-JumpPowerSlider.TextSize = 14
-
-JumpPowerSlider.FocusLost:Connect(function()
-    local power = tonumber(JumpPowerSlider.Text:match("%d+"))
-    if power then
-        game.Players.LocalPlayer.Character.Humanoid.JumpPower = power
-        JumpPowerSlider.Text = "JumpPower: " .. power
     end
 end)
 
