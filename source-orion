@@ -22,21 +22,104 @@ local PlayerTab = Window:MakeTab({
     PremiumOnly = false
 })
 
--- Infinite Yield Button
+-- **Admin Features**
+-- Infinite Yield Loader
 AdminTab:AddButton({
     Name = "Load Infinite Yield",
     Callback = function()
         loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
         OrionLib:MakeNotification({
             Name = "Infinite Yield Loaded",
-            Content = "Infinite Yield script has been loaded.",
+            Content = "Loaded Infinite Yield script successfully.",
             Image = "rbxassetid://4483345998",
             Time = 5
         })
     end
 })
 
--- ESP Button
+-- Toggle God Mode
+local godMode = false
+AdminTab:AddButton({
+    Name = "Toggle God Mode",
+    Callback = function()
+        godMode = not godMode
+        local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+        if humanoid then
+            if godMode then
+                humanoid.MaxHealth = math.huge
+                humanoid.Health = math.huge
+                OrionLib:MakeNotification({
+                    Name = "God Mode Enabled",
+                    Content = "You are now invincible!",
+                    Image = "rbxassetid://4483345998",
+                    Time = 5
+                })
+            else
+                humanoid.MaxHealth = 100
+                humanoid.Health = humanoid.MaxHealth
+                OrionLib:MakeNotification({
+                    Name = "God Mode Disabled",
+                    Content = "God Mode is now turned off.",
+                    Image = "rbxassetid://4483345998",
+                    Time = 5
+                })
+            end
+        end
+    end
+})
+
+-- No-Clip Mode
+local noclip = false
+AdminTab:AddButton({
+    Name = "Toggle No-Clip",
+    Callback = function()
+        noclip = not noclip
+        OrionLib:MakeNotification({
+            Name = noclip and "No-Clip Enabled" or "No-Clip Disabled",
+            Content = "Walk through walls toggled.",
+            Image = "rbxassetid://4483345998",
+            Time = 5
+        })
+        game:GetService("RunService").Stepped:Connect(function()
+            if noclip and game.Players.LocalPlayer.Character then
+                for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    end
+})
+
+-- Set Time of Day
+AdminTab:AddTextbox({
+    Name = "Set Time (0-24)",
+    Default = "12",
+    TextDisappear = false,
+    Callback = function(value)
+        local time = tonumber(value)
+        if time and time >= 0 and time <= 24 then
+            game.Lighting.TimeOfDay = tostring(time) .. ":00:00"
+            OrionLib:MakeNotification({
+                Name = "Time Updated",
+                Content = "Time set to " .. time .. ":00.",
+                Image = "rbxassetid://4483345998",
+                Time = 5
+            })
+        else
+            OrionLib:MakeNotification({
+                Name = "Invalid Input",
+                Content = "Enter a valid time between 0 and 24.",
+                Image = "rbxassetid://4483345998",
+                Time = 5
+            })
+        end
+    end
+})
+
+-- **Utilities Features**
+-- Toggle ESP
 local espEnabled = false
 UtilitiesTab:AddButton({
     Name = "Toggle ESP",
@@ -46,7 +129,7 @@ UtilitiesTab:AddButton({
             loadstring(game:HttpGet('https://pastebin.com/raw/zzhc9DPv'))()
             OrionLib:MakeNotification({
                 Name = "ESP Enabled",
-                Content = "ESP is now enabled.",
+                Content = "ESP is now active.",
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
@@ -54,7 +137,7 @@ UtilitiesTab:AddButton({
             loadstring(game:HttpGet('https://pastebin.com/raw/6sEwWX4V'))()
             OrionLib:MakeNotification({
                 Name = "ESP Disabled",
-                Content = "ESP is now disabled.",
+                Content = "ESP has been turned off.",
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
@@ -62,25 +145,25 @@ UtilitiesTab:AddButton({
     end
 })
 
--- WalkSpeed Input
-PlayerTab:AddTextbox({
-    Name = "Set WalkSpeed",
-    Default = "16",
+-- Set Brightness
+UtilitiesTab:AddTextbox({
+    Name = "Set Brightness",
+    Default = "2",
     TextDisappear = false,
     Callback = function(value)
-        local speed = tonumber(value)
-        if speed and speed > 0 then
-            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
+        local brightness = tonumber(value)
+        if brightness and brightness >= 0 and brightness <= 10 then
+            game.Lighting.Brightness = brightness
             OrionLib:MakeNotification({
-                Name = "WalkSpeed Updated",
-                Content = "WalkSpeed set to " .. speed,
+                Name = "Brightness Updated",
+                Content = "Brightness set to " .. brightness,
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
         else
             OrionLib:MakeNotification({
                 Name = "Invalid Input",
-                Content = "Please enter a valid number for WalkSpeed.",
+                Content = "Enter a number between 0 and 10 for Brightness.",
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
@@ -88,33 +171,7 @@ PlayerTab:AddTextbox({
     end
 })
 
--- JumpPower Input
-PlayerTab:AddTextbox({
-    Name = "Set JumpPower",
-    Default = "50",
-    TextDisappear = false,
-    Callback = function(value)
-        local jumpPower = tonumber(value)
-        if jumpPower and jumpPower > 0 then
-            game.Players.LocalPlayer.Character.Humanoid.JumpPower = jumpPower
-            OrionLib:MakeNotification({
-                Name = "JumpPower Updated",
-                Content = "JumpPower set to " .. jumpPower,
-                Image = "rbxassetid://4483345998",
-                Time = 5
-            })
-        else
-            OrionLib:MakeNotification({
-                Name = "Invalid Input",
-                Content = "Please enter a valid number for JumpPower.",
-                Image = "rbxassetid://4483345998",
-                Time = 5
-            })
-        end
-    end
-})
-
--- FOV Input
+-- Field of View (FOV) Setter
 UtilitiesTab:AddTextbox({
     Name = "Set FOV",
     Default = "70",
@@ -140,25 +197,78 @@ UtilitiesTab:AddTextbox({
     end
 })
 
--- Brightness Input
-UtilitiesTab:AddTextbox({
-    Name = "Set Brightness",
-    Default = "2",
+-- **Player Features**
+-- WalkSpeed Setter
+PlayerTab:AddTextbox({
+    Name = "Set WalkSpeed",
+    Default = "16",
     TextDisappear = false,
     Callback = function(value)
-        local brightness = tonumber(value)
-        if brightness and brightness >= 0 and brightness <= 10 then
-            game.Lighting.Brightness = brightness
+        local speed = tonumber(value)
+        if speed and speed > 0 then
+            game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = speed
             OrionLib:MakeNotification({
-                Name = "Brightness Updated",
-                Content = "Brightness set to " .. brightness,
+                Name = "WalkSpeed Updated",
+                Content = "WalkSpeed set to " .. speed,
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
         else
             OrionLib:MakeNotification({
                 Name = "Invalid Input",
-                Content = "Enter a number between 0 and 10 for Brightness.",
+                Content = "Please enter a valid number for WalkSpeed.",
+                Image = "rbxassetid://4483345998",
+                Time = 5
+            })
+        end
+    end
+})
+
+-- JumpPower Setter
+PlayerTab:AddTextbox({
+    Name = "Set JumpPower",
+    Default = "50",
+    TextDisappear = false,
+    Callback = function(value)
+        local jumpPower = tonumber(value)
+        if jumpPower and jumpPower > 0 then
+            game.Players.LocalPlayer.Character.Humanoid.JumpPower = jumpPower
+            OrionLib:MakeNotification({
+                Name = "JumpPower Updated",
+                Content = "JumpPower set to " .. jumpPower,
+                Image = "rbxassetid://4483345998",
+                Time = 5
+            })
+        else
+            OrionLib:MakeNotification({
+                Name = "Invalid Input",
+                Content = "Please enter a valid number for JumpPower.",
+                Image = "rbxassetid://4483345998",
+                Time = 5
+            })
+        end
+    end
+})
+
+-- Teleport to Player
+PlayerTab:AddTextbox({
+    Name = "Teleport to Player",
+    Default = "PlayerName",
+    TextDisappear = true,
+    Callback = function(value)
+        local targetPlayer = game.Players:FindFirstChild(value)
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+            OrionLib:MakeNotification({
+                Name = "Teleported!",
+                Content = "You teleported to " .. value,
+                Image = "rbxassetid://4483345998",
+                Time = 5
+            })
+        else
+            OrionLib:MakeNotification({
+                Name = "Teleport Failed",
+                Content = "Player not found or unavailable.",
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
@@ -185,62 +295,7 @@ PlayerTab:AddButton({
             end
             OrionLib:MakeNotification({
                 Name = invisible and "Invisible" or "Visible",
-                Content = "Your character is now " .. (invisible and "invisible" or "visible") .. ".",
-                Image = "rbxassetid://4483345998",
-                Time = 5
-            })
-        end
-    end
-})
-
--- God Mode Toggle
-local godMode = false
-AdminTab:AddButton({
-    Name = "Toggle God Mode",
-    Callback = function()
-        godMode = not godMode
-        local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-        if godMode and humanoid then
-            humanoid.MaxHealth = math.huge
-            humanoid.Health = math.huge
-            OrionLib:MakeNotification({
-                Name = "God Mode Enabled",
-                Content = "You are now invincible.",
-                Image = "rbxassetid://4483345998",
-                Time = 5
-            })
-        elseif humanoid then
-            humanoid.MaxHealth = 100
-            humanoid.Health = humanoid.MaxHealth
-            OrionLib:MakeNotification({
-                Name = "God Mode Disabled",
-                Content = "God Mode is now disabled.",
-                Image = "rbxassetid://4483345998",
-                Time = 5
-            })
-        end
-    end
-})
-
--- Set Time of Day Input
-AdminTab:AddTextbox({
-    Name = "Set Time (0-24)",
-    Default = "12",
-    TextDisappear = false,
-    Callback = function(value)
-        local time = tonumber(value)
-        if time and time >= 0 and time <= 24 then
-            game.Lighting.TimeOfDay = tostring(time) .. ":00:00"
-            OrionLib:MakeNotification({
-                Name = "Time Updated",
-                Content = "Time set to " .. time .. ":00.",
-                Image = "rbxassetid://4483345998",
-                Time = 5
-            })
-        else
-            OrionLib:MakeNotification({
-                Name = "Invalid Input",
-                Content = "Enter a valid time between 0 and 24.",
+                Content = "You are now " .. (invisible and "invisible" or "visible") .. ".",
                 Image = "rbxassetid://4483345998",
                 Time = 5
             })
@@ -262,4 +317,5 @@ PlayerTab:AddButton({
     end
 })
 
+-- Initialize GUI
 OrionLib:Init()
