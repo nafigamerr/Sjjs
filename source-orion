@@ -1,4 +1,4 @@
-local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Orion/main/source"))()
+local OrionLib = loadstring(game:HttpGet("https://pastebin.com/raw/eHwqkrCe"))()
 local Window = OrionLib:MakeWindow({Name = "All-In-One Hack", HidePremium = false, SaveConfig = true, ConfigFolder = "AllInOneHack"})
 
 -- Admin Tab
